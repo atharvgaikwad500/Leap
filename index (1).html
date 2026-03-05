@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leap — Show up. Own the day.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:   #faf8f3;
+      --paper:   #ffffff;
+      --border:  #e8e3db;
+      --ink:     #1c1917;
+      --ink2:    #6b6560;
+      --ink3:    #a8a39c;
+      --accent:  #2563a8;
+      --accent-l:#eff4fb;
+      --green:   #1e7a4a;
+      --green-l: #edf7f2;
+      --red:     #c0392b;
+      --red-l:   #fdf0ee;
+      --amber:   #b45309;
+      --amber-l: #fef3e2;
+      --frog:    #3a7d44;
+      --frog-l:  #e8f5ea;
+      --serif:   'Playfair Display', Georgia, serif;
+      --sans:    'Nunito', system-ui, sans-serif;
+    }
+    html { font-size: 15px; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell { max-width: 920px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── HEADER ── */
+    .site-header {
+      padding: 22px 0 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo-name {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .logo-tag {
+      font-size: 11px;
+      color: var(--ink3);
+      font-weight: 500;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    /* FROG PILL */
+    .frog-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--frog-l);
+      border: 1px solid #b7debb;
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: default;
+      position: relative;
+      transition: box-shadow 0.15s;
+    }
+    .frog-pill:hover { box-shadow: 0 2px 10px rgba(58,125,68,0.15); }
+    .frog-emoji { font-size: 1.3rem; }
+    .frog-pts  { font-size: 15px; font-weight: 700; color: var(--frog); line-height: 1; }
+    .frog-level{ font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+    /* TOOLTIP */
+    .tip-wrap { position: relative; display: inline-block; }
+    .tip-box {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 250px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.65;
+      padding: 13px 15px;
+      border-radius: 8px;
+      z-index: 200;
+      font-weight: 400;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .tip-box::before {
+      content: '';
+      position: absolute;
+      top: -5px; right: 22px;
+      width: 10px; height: 10px;
+      background: var(--ink);
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+    .tip-wrap:hover .tip-box { display: block; }
+    .tip-box strong { color: #7dc88a; display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* FROG OF DAY tooltip on task */
+    .frog-task-tip { position: relative; display: inline-flex; align-items: center; }
+    .frog-task-tip .tip-box { right: auto; left: 0; top: calc(100% + 6px); width: 220px; }
+    .frog-task-tip .tip-box::before { right: auto; left: 14px; }
+    .frog-task-tip:hover .tip-box { display: block; }
+
+    /* ── QUOTE ── */
+    .quote-section {
+      background: #fef6e4;
+      border-top: 3px solid var(--amber);
+      margin: 0 -20px 28px;
+      padding: 28px 40px 24px;
+      text-align: center;
+    }
+    .quote-text {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.35rem;
+      line-height: 1.65;
+      font-weight: 600;
+      color: #2a1f0e;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .quote-author {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 10px;
+      font-weight: 700;
+    }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .c-blue  { color: var(--accent); }
+    .c-red   { color: var(--red);    }
+    .c-green { color: var(--green);  }
+    .c-ink   { color: var(--ink);    }
+    .stat-label {
+      font-size: 10px;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    /* ── TWO COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* ── SECTION HEAD ── */
+    .sec-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .sec-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .sec-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .d-blue  { background: var(--accent); }
+    .d-amber { background: var(--amber);  }
+    .d-frog  { background: var(--frog);   }
+    .sec-count { font-size: 11px; color: var(--ink3); font-weight: 600; }
+
+    /* ── PANEL ── */
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-form {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+    .f-row-4 { display: grid; grid-template-columns: 1fr 140px 120px auto; gap: 7px; align-items: end; }
+    .f-row-3 { display: grid; grid-template-columns: 1fr 120px auto; gap: 7px; align-items: end; }
+
+    .field label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--ink3);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    input[type=text], input[type=date], select {
+      width: 100%;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      font-family: var(--sans);
+      font-size: 12.5px;
+      color: var(--ink);
+      background: var(--paper);
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+      font-weight: 500;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--ink3); font-weight: 400; }
+
+    .btn {
+      height: 34px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+    .btn:hover  { opacity: 0.88; }
+    .btn:active { transform: scale(0.97); }
+    .btn-blue  { background: var(--accent); color: #fff; }
+    .btn-amber { background: var(--amber);  color: #fff; }
+    .btn-frog  { background: var(--frog);   color: #fff; }
+
+    /* ── TASK ITEMS ── */
+    .task-list { display: flex; flex-direction: column; }
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+      animation: rowIn 0.2s ease both;
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-item:hover { background: var(--cream); }
+    .task-item.is-done { opacity: 0.35; }
+    .task-item.is-done .ti-title { text-decoration: line-through; }
+    .task-item.is-found { background: var(--accent-l); }
+    .task-item.is-frog  { background: var(--frog-l);  }
+
+    .p-pill {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .p1 { background: var(--red-l);   color: var(--red);   }
+    .p2 { background: var(--amber-l); color: var(--amber); }
+    .p3 { background: var(--green-l); color: var(--green); }
+
+    .ti-body { flex: 1; min-width: 0; }
+    .ti-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ti-meta { font-size: 11px; color: var(--ink3); margin-top: 2px; font-weight: 500; }
+
+    .ti-actions { display: flex; gap: 3px; flex-shrink: 0; }
+    .icon-btn {
+      height: 26px;
+      padding: 0 9px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: transparent;
+      color: var(--ink3);
+      cursor: pointer;
+      font-size: 11px;
+      font-family: var(--sans);
+      font-weight: 700;
+      display: flex; align-items: center;
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+    .icon-btn.done:hover { border-color: var(--green); color: var(--green); background: var(--green-l); }
+    .icon-btn.del:hover  { border-color: var(--red);   color: var(--red);   background: var(--red-l);  }
+    .icon-btn.push:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-l); }
+
+    /* ── ROUTINE TIME GROUPS ── */
+    .time-group-label {
+      padding: 7px 16px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ink3);
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── EMPTY ── */
+    .empty-state {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--ink3);
+      font-size: 12.5px;
+      line-height: 1.8;
+    }
+    .empty-state em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--ink2);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      gap: 6px;
+      margin: 4px 0 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-wrap { flex: 1; min-width: 160px; position: relative; }
+    .search-wrap input { padding-left: 30px; }
+    .search-wrap::before {
+      content: '⌕';
+      position: absolute;
+      left: 9px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink3);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    .tool-btn {
+      height: 34px;
+      padding: 0 13px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink2);
+      cursor: pointer;
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+    .tool-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tool-btn.t-red:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── LOG ── */
+    .log-bar {
+      margin-bottom: 24px;
+      padding: 9px 14px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--ink2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+    .log-bar::before { content: '›'; color: var(--accent); font-size: 16px; flex-shrink: 0; font-weight: 700; }
+
+    /* ── POINTS TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--frog);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(58,125,68,0.3);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: none; }
+
+    /* ── ABOUT NOTE ── */
+    .about-note {
+      margin-top: 32px;
+      padding: 16px 20px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--ink2);
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .about-note strong { color: var(--ink); font-weight: 700; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes rowIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 680px) {
+      .two-col { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .f-row-4 { grid-template-columns: 1fr 1fr; }
+      .f-row-3 { grid-template-columns: 1fr; }
+      .quote-section { padding: 24px 20px 20px; }
+      .quote-text { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div>
+      <div class="logo-name">Leap.</div>
+      <div class="logo-tag">Show up. Own the day.</div>
+    </div>
+    <div class="tip-wrap">
+      <div class="frog-pill">
+        <span class="frog-emoji">🐸</span>
+        <div>
+          <div class="frog-pts" id="frogPts">0 frogs</div>
+          <div class="frog-level" id="frogLevel">Beginner</div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>🐸 What are Frogs?</strong>
+        Frogs are your productivity points — inspired by the book <em>"Eat That Frog"</em> by Brian Tracy. The idea: do your hardest task first, and everything else feels easy.<br><br>
+        Complete tasks before deadlines, check off your routine, and watch your frogs grow.<br><br>
+        <strong style="color:#f9c74f">Levels:</strong> Beginner → Go-Getter → Wild Frog 🌿
+      </div>
+    </div>
+  </header>
+
+  <!-- QUOTE -->
+  <div class="quote-section">
+    <div class="quote-text" id="quoteText"></div>
+    <div class="quote-author" id="quoteAuthor"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num c-blue"  id="sTotal">0</div>
+      <div class="stat-label">Total Tasks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num c-red"   id="sHigh">0</div>
+      <div class="stat-label">High Priority</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num c-green" id="sDone">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num c-ink"   id="sPending">0</div>
+      <div class="stat-label">Pending</div>
+    </div>
+  </div>
+
+  <!-- TODAY + GOALS -->
+  <div class="two-col">
+
+    <!-- TODAY'S TASKS -->
+    <div>
+      <div class="sec-head">
+        <div class="sec-title"><div class="sec-dot d-blue"></div>Today's Tasks</div>
+        <span class="sec-count" id="todayCount">0 tasks</span>
+      </div>
+      <div class="panel">
+        <div class="panel-form">
+          <div style="display:grid;grid-template-columns:1fr 130px auto;gap:7px;align-items:end;">
+            <div class="field">
+              <label>Title</label>
+              <input type="text" id="tTitle" placeholder="e.g. Revise OS chapter"/>
+            </div>
+            <div class="field">
+              <label>Priority</label>
+              <select id="tPriority">
+                <option value="1">High</option>
+                <option value="2" selected>Medium</option>
+                <option value="3">Low</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="btn btn-blue" onclick="addToday()">Add →</button>
+            </div>
+          </div>
+        </div>
+        <div class="task-list" id="todayList">
+          <div class="empty-state"><em>All clear!</em>Add today's tasks above.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LONG-TERM GOALS -->
+    <div>
+      <div class="sec-head">
+        <div class="sec-title"><div class="sec-dot d-amber"></div>Long-term Goals</div>
+        <span class="sec-count" id="goalCount">0 goals</span>
+      </div>
+      <div class="panel">
+        <div class="panel-form">
+          <div class="f-row-4">
+            <div class="field">
+              <label>Goal</label>
+              <input type="text" id="gTitle" placeholder="e.g. Build a full-stack app"/>
+            </div>
+            <div class="field">
+              <label>Target Date</label>
+              <input type="date" id="gDeadline"/>
+            </div>
+            <div class="field">
+              <label>Priority</label>
+              <select id="gPriority">
+                <option value="1">High</option>
+                <option value="2" selected>Medium</option>
+                <option value="3">Low</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="btn btn-amber" onclick="addGoal()">Add →</button>
+            </div>
+          </div>
+        </div>
+        <div class="task-list" id="goalList">
+          <div class="empty-state"><em>Dream big.</em>Add goals you want to achieve.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUTINE -->
+  <div class="sec-head">
+    <div class="sec-title"><div class="sec-dot d-frog"></div>My Routine <span style="font-size:11px;color:var(--ink3);font-family:var(--sans);font-weight:600;margin-left:4px;">— resets daily</span></div>
+    <span class="sec-count" id="routineCount">0 habits</span>
+  </div>
+  <div class="panel" style="margin-bottom:16px;">
+    <div class="panel-form">
+      <div style="display:grid;grid-template-columns:1fr 110px 16px 110px auto;gap:7px;align-items:end;">
+        <div class="field">
+          <label>Habit / Routine Item</label>
+          <input type="text" id="rTitle" placeholder="e.g. Morning walk, Read 20 pages"/>
+        </div>
+        <div class="field">
+          <label>From</label>
+          <input type="text" id="rTimeFrom" placeholder="7:30 AM"/>
+        </div>
+        <div style="display:flex;align-items:flex-end;padding-bottom:7px;">
+          <span style="font-size:12px;color:var(--ink3);font-weight:600;white-space:nowrap;">to</span>
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input type="text" id="rTimeTo" placeholder="8:00 AM"/>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-frog" onclick="addRoutine()">Add Habit →</button>
+        </div>
+      </div>
+    </div>
+    <div id="routineList">
+      <div class="empty-state"><em>Build your routine.</em>Add habits you want to do every day.</div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <input type="text" id="inSearch" placeholder="Search tasks or goals..."/>
+    </div>
+    <button class="tool-btn" onclick="searchAll()">Search</button>
+    <button class="tool-btn" onclick="sortAll()">Sort Priority</button>
+    <button class="tool-btn" onclick="undoAll()">↩ Undo</button>
+    <button class="tool-btn t-red" onclick="deleteBySearch()">Delete</button>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-bar" id="logBar">Ready — add your first task and start leaping.</div>
+
+  <!-- ABOUT NOTE -->
+  <div class="about-note">
+    <strong>About this project —</strong> Leap is built with HTML, CSS, and JavaScript. Under the hood, it uses a <strong>Singly Linked List</strong> for dynamic task storage, a <strong>Stack</strong> for undo functionality, and <strong>Bubble Sort</strong> for priority ordering — all implemented from scratch without any libraries. Data is saved locally on your device using localStorage.
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span>Leap · 2024</span>
+    <span>Linked List · Stack · Bubble Sort O(n²) · Linear Search O(n)</span>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// QUOTES
+// ══════════════════════════════════════════
+const QUOTES = [
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "Stop waiting for the perfect moment. Take the moment and make it perfect.", author: "Unknown" },
+  { text: "Procrastination is the thief of time. Collar him.", author: "Charles Dickens" },
+  { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+  { text: "You don't have to see the whole staircase, just take the first step.", author: "Martin Luther King Jr." },
+  { text: "Someday is not a day of the week.", author: "Janet Dailey" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+  { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+  { text: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" },
+  { text: "Do the hard jobs first. The easy jobs will take care of themselves.", author: "Dale Carnegie" },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+];
+const d = new Date();
+const q = QUOTES[(d.getDate() + d.getMonth()) % QUOTES.length];
+document.getElementById('quoteText').textContent   = q.text;
+document.getElementById('quoteAuthor').textContent = '— ' + q.author;
+
+// ══════════════════════════════════════════
+// DSA — LINKED LIST
+// ══════════════════════════════════════════
+class TaskNode {
+  constructor(title, deadline, priority) {
+    this.id       = Date.now() + Math.random();
+    this.title    = title;
+    this.deadline = deadline;
+    this.priority = parseInt(priority);
+    this.isDone   = false;
+    this.next     = null;
+  }
+}
+
+class LinkedList {
+  constructor() { this.head = null; this.size = 0; }
+
+  // Add to tail — O(n)
+  add(title, deadline, priority) {
+    const n = new TaskNode(title, deadline, priority);
+    if (!this.head) this.head = n;
+    else { let c = this.head; while (c.next) c = c.next; c.next = n; }
+    this.size++;
+    return n;
+  }
+
+  // Delete by title — O(n)
+  deleteByTitle(title) {
+    if (!this.head) return null;
+    const t = title.toLowerCase();
+    if (this.head.title.toLowerCase() === t) {
+      const d = this.head; this.head = this.head.next; this.size--; return d;
+    }
+    let c = this.head;
+    while (c.next) {
+      if (c.next.title.toLowerCase() === t) {
+        const d = c.next; c.next = c.next.next; this.size--; return d;
+      }
+      c = c.next;
+    }
+    return null;
+  }
+
+  // Delete by id — O(n)
+  deleteById(id) {
+    if (!this.head) return null;
+    if (this.head.id === id) {
+      const d = this.head; this.head = this.head.next; this.size--; return d;
+    }
+    let c = this.head;
+    while (c.next) {
+      if (c.next.id === id) {
+        const d = c.next; c.next = c.next.next; this.size--; return d;
+      }
+      c = c.next;
+    }
+    return null;
+  }
+
+  // Mark done — O(n)
+  markDone(id) {
+    let c = this.head;
+    while (c) { if (c.id === id) { c.isDone = true; return true; } c = c.next; }
+    return false;
+  }
+
+  // Linear Search — O(n)
+  search(title) {
+    let c = this.head, i = 0;
+    const t = title.toLowerCase();
+    while (c) {
+      if (c.title.toLowerCase() === t) return { node: c, index: i };
+      c = c.next; i++;
+    }
+    return null;
+  }
+
+  // Bubble Sort by priority — O(n²)
+  sort() {
+    if (!this.head || !this.head.next) return;
+    let swapped;
+    do {
+      swapped = false;
+      let c = this.head;
+      while (c.next) {
+        if (c.priority > c.next.priority) {
+          [c.id,c.next.id]=[c.next.id,c.id];
+          [c.title,c.next.title]=[c.next.title,c.title];
+          [c.deadline,c.next.deadline]=[c.next.deadline,c.deadline];
+          [c.priority,c.next.priority]=[c.next.priority,c.priority];
+          [c.isDone,c.next.isDone]=[c.next.isDone,c.isDone];
+          swapped = true;
+        }
+        c = c.next;
+      }
+    } while (swapped);
+  }
+
+  reAdd(node) {
+    node.next = null;
+    if (!this.head) this.head = node;
+    else { let c = this.head; while (c.next) c = c.next; c.next = node; }
+    this.size++;
+  }
+
+  toArray() {
+    const a = []; let c = this.head;
+    while (c) { a.push(c); c = c.next; }
+    return a;
+  }
+}
+
+// ══════════════════════════════════════════
+// DSA — STACK (for Undo)
+// ══════════════════════════════════════════
+class Stack {
+  constructor(cap = 15) { this.s = []; this.cap = cap; }
+  push(node, from) {
+    if (this.s.length >= this.cap) this.s.shift();
+    this.s.push({ node, from });
+  }
+  pop()  { return this.s.length ? this.s.pop() : null; }
+  size() { return this.s.length; }
+}
+
+// ══════════════════════════════════════════
+// INIT + LOCALSTORAGE
+// ══════════════════════════════════════════
+const todayLL   = new LinkedList();
+const goalLL    = new LinkedList();
+const undoStack = new Stack();
+
+let frogs = 0;
+let routineItems = []; // { id, title, time, doneToday }
+const TODAY_KEY = new Date().toDateString();
+
+function saveState() {
+  localStorage.setItem('leap_today',   JSON.stringify(todayLL.toArray().map(n => ({...n, next: null}))));
+  localStorage.setItem('leap_goals',   JSON.stringify(goalLL.toArray().map(n => ({...n, next: null}))));
+  localStorage.setItem('leap_frogs',   frogs);
+  localStorage.setItem('leap_routine', JSON.stringify(routineItems));
+  localStorage.setItem('leap_date',    TODAY_KEY);
+}
+
+function loadState() {
+  const savedDate = localStorage.getItem('leap_date');
+  const isNewDay  = savedDate !== TODAY_KEY;
+
+  // Load frogs
+  frogs = parseInt(localStorage.getItem('leap_frogs') || '0');
+
+  // Load today tasks
+  const savedToday = JSON.parse(localStorage.getItem('leap_today') || '[]');
+  savedToday.forEach(n => {
+    const node = todayLL.add(n.title, n.deadline, n.priority);
+    node.id     = n.id;
+    node.isDone = n.isDone;
+  });
+
+  // Load goals
+  const savedGoals = JSON.parse(localStorage.getItem('leap_goals') || '[]');
+  savedGoals.forEach(n => {
+    const node = goalLL.add(n.title, n.deadline, n.priority);
+    node.id     = n.id;
+    node.isDone = n.isDone;
+  });
+
+  // Load routine — reset doneToday if new day
+  const savedRoutine = JSON.parse(localStorage.getItem('leap_routine') || '[]');
+  routineItems = savedRoutine.map(r => ({
+    ...r,
+    doneToday: isNewDay ? false : r.doneToday
+  }));
+}
+
+loadState();
+
+// ══════════════════════════════════════════
+// FROG SYSTEM
+// ══════════════════════════════════════════
+function getLevel(f) {
+  if (f >= 201) return '🌿 Wild Frog';
+  if (f >= 51)  return '🐸 Go-Getter';
+  return '🌱 Beginner';
+}
+
+function awardFrogs(pts, reason) {
+  frogs += pts;
+  document.getElementById('frogPts').textContent  = frogs + ' frogs';
+  document.getElementById('frogLevel').textContent = getLevel(frogs);
+  showToast(`+${pts} 🐸  ${reason}`);
+  saveState();
+}
+
+function updateFrogUI() {
+  document.getElementById('frogPts').textContent   = frogs + ' frogs';
+  document.getElementById('frogLevel').textContent  = getLevel(frogs);
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════
+// ACTIONS — TODAY
+// ══════════════════════════════════════════
+function addToday() {
+  const title    = v('tTitle');
+  const priority = v('tPriority');
+  if (!title) return log('Enter a task title.');
+  // Auto set deadline to today
+  const today = new Date();
+  const deadline = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  todayLL.add(title, deadline, priority);
+  clear('tTitle');
+  log(`Added "${title}" — node appended at Linked List tail.`);
+  saveState(); render();
+}
+
+function markDoneToday(id) {
+  const tasks = todayLL.toArray();
+  const task  = tasks.find(t => t.id === id);
+  if (!task) return;
+  todayLL.markDone(id);
+
+  // Calculate frogs based on deadline
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const deadline = new Date(task.deadline); deadline.setHours(0,0,0,0);
+  const isFirst  = tasks.filter(t => t.isDone).length === 0;
+
+  let pts = 0, reason = '';
+  if (today < deadline)       { pts = 10; reason = 'Done before deadline!'; }
+  else if (+today === +deadline) { pts = 5;  reason = 'Done on deadline day!'; }
+  else                        { pts = 2;  reason = 'Task completed.'; }
+
+  if (isFirst) { pts += 6; reason = '🐸 First task of the day!'; }
+  awardFrogs(pts, reason);
+  log(`Marked done — +${pts} frogs earned.`);
+  saveState(); render();
+}
+
+function deleteTodayById(id) {
+  const d = todayLL.deleteById(id);
+  if (d) { undoStack.push(d, 'today'); log(`Deleted "${d.title}" — pushed to Undo Stack.`); }
+  saveState(); render();
+}
+
+// ══════════════════════════════════════════
+// ACTIONS — GOALS
+// ══════════════════════════════════════════
+function addGoal() {
+  const title    = v('gTitle');
+  const deadline = v('gDeadline');
+  const priority = v('gPriority');
+  if (!title)    return log('Enter a goal title.');
+  if (!deadline) return log('Select a target date.');
+  goalLL.add(title, deadline, priority);
+  clear('gTitle');
+  log(`Added "${title}" to Long-term Goals.`);
+  saveState(); render();
+}
+
+function markDoneGoal(id) {
+  goalLL.markDone(id);
+  awardFrogs(10, 'Long-term goal achieved!');
+  log('Goal marked complete — +10 frogs!');
+  saveState(); render();
+}
+
+function deleteGoalById(id) {
+  const d = goalLL.deleteById(id);
+  if (d) { undoStack.push(d, 'goal'); log(`Deleted "${d.title}" — pushed to Undo Stack.`); }
+  saveState(); render();
+}
+
+// ══════════════════════════════════════════
+// ACTIONS — ROUTINE
+// ══════════════════════════════════════════
+function addRoutine() {
+  const title = v('rTitle');
+  const fromRaw = document.getElementById('rTimeFrom').value.trim();
+  const toRaw   = document.getElementById('rTimeTo').value.trim();
+  if (!title)   return log('Enter a habit name.');
+  if (!fromRaw) return log('Enter a start time e.g. 7:30 AM.');
+  if (!toRaw)   return log('Enter an end time e.g. 8:00 AM.');
+  const time     = parseTimeTo24(fromRaw);
+  const timeTo   = parseTimeTo24(toRaw);
+  if (!time)   return log('Invalid start time. Try "7:30 AM" or "10:00 PM".');
+  if (!timeTo) return log('Invalid end time. Try "8:00 AM" or "10:30 PM".');
+  routineItems.push({ id: Date.now() + Math.random(), title, time, timeTo, doneToday: false });
+  clear('rTitle');
+  document.getElementById('rTimeFrom').value = '';
+  document.getElementById('rTimeTo').value   = '';
+  log(`Added "${title}" (${fmtTime(time)} – ${fmtTime(timeTo)}) to your routine.`);
+  saveState(); render();
+}
+
+function parseTimeTo24(str) {
+  if (!str) return null;
+  // Normalise — replace dots/spaces used as separators with colon
+  // so "7.30", "7 30" become "7:30"
+  str = str.trim().toUpperCase().replace(/[.\s]+(?=\d{2}$|\d{1,2}\s*(AM|PM))/g, ':');
+
+  let h, m = 0;
+
+  // "7", "8", "07" — just an hour, no minutes
+  const onlyHour = str.match(/^(\d{1,2})\s*(AM|PM)?$/);
+  if (onlyHour) {
+    h = parseInt(onlyHour[1]);
+    m = 0;
+    const period = onlyHour[2];
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    // No period — treat as 24h (8 → 08:00, 20 → 20:00)
+    if (h > 23) return null;
+    return `${String(h).padStart(2,'0')}:00`;
+  }
+
+  // "7:30 AM", "7:30PM", "07:30 AM", "7.30AM"
+  const withPeriod = str.match(/^(\d{1,2})[:.](\d{2})\s*(AM|PM)$/);
+  if (withPeriod) {
+    h = parseInt(withPeriod[1]);
+    m = parseInt(withPeriod[2]);
+    if (withPeriod[3] === 'PM' && h !== 12) h += 12;
+    if (withPeriod[3] === 'AM' && h === 12) h = 0;
+    if (h > 23 || m > 59) return null;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  }
+
+  // "7:30", "07:30", "7.30" — 24h no period
+  const noPeriod = str.match(/^(\d{1,2})[:.](\d{2})$/);
+  if (noPeriod) {
+    h = parseInt(noPeriod[1]);
+    m = parseInt(noPeriod[2]);
+    if (h > 23 || m > 59) return null;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  }
+
+  // "1430" military
+  const military = str.match(/^(\d{2})(\d{2})$/);
+  if (military) {
+    h = parseInt(military[1]); m = parseInt(military[2]);
+    if (h > 23 || m > 59) return null;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  }
+
+  return null;
+}
+
+function fmtTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hour  = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function getTimeGroup(t) {
+  if (!t) return 'Morning';
+  const h = parseInt(t.split(':')[0]);
+  if (h < 12) return 'Morning';
+  if (h < 17) return 'Afternoon';
+  return 'Evening';
+}
+
+function toggleRoutine(id) {
+  const item = routineItems.find(r => r.id === id);
+  if (!item) return;
+  if (!item.doneToday) {
+    item.doneToday = true;
+    awardFrogs(3, 'Routine habit completed!');
+    log(`"${item.title}" done — +3 frogs!`);
+  } else {
+    item.doneToday = false;
+    log(`"${item.title}" unchecked.`);
+  }
+  saveState(); render();
+}
+
+function pushToToday(id) {
+  const item = routineItems.find(r => r.id === id);
+  if (!item) return;
+  const today = new Date();
+  const dd = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  todayLL.add(item.title, dd, 3);
+  log(`"${item.title}" pushed to Today's Tasks.`);
+  saveState(); render();
+}
+
+function deleteRoutine(id) {
+  routineItems = routineItems.filter(r => r.id !== id);
+  log('Routine item removed.');
+  saveState(); render();
+}
+
+// ══════════════════════════════════════════
+// TOOLBAR
+// ══════════════════════════════════════════
+function deleteBySearch() {
+  const title = v('inSearch');
+  if (!title) return log('Type a task title in the search box, then click Delete.');
+  let d = todayLL.deleteByTitle(title);
+  if (d) { undoStack.push(d, 'today'); clear('inSearch'); log(`Deleted "${d.title}" from Today's Tasks.`); saveState(); render(); return; }
+  d = goalLL.deleteByTitle(title);
+  if (d) { undoStack.push(d, 'goal'); clear('inSearch'); log(`Deleted "${d.title}" from Long-term Goals.`); saveState(); render(); return; }
+  log(`"${title}" not found.`);
+}
+
+function undoAll() {
+  const item = undoStack.pop();
+  if (!item) return log('Nothing to undo — Stack is empty.');
+  const list = item.from === 'today' ? todayLL : goalLL;
+  list.reAdd(item.node);
+  log(`Undo — "${item.node.title}" restored. Stack depth: ${undoStack.size()}.`);
+  saveState(); render();
+}
+
+function sortAll() {
+  todayLL.sort(); goalLL.sort();
+  log('Bubble Sort applied — tasks ordered High → Medium → Low priority.');
+  saveState(); render();
+}
+
+function searchAll() {
+  const title = v('inSearch');
+  if (!title) return log('Enter a title to search.');
+  document.querySelectorAll('.task-item').forEach(r => r.classList.remove('is-found'));
+  const r1 = todayLL.search(title);
+  const r2 = goalLL.search(title);
+  if (r1) {
+    const rows = document.querySelectorAll('#todayList .task-item');
+    if (rows[r1.index]) { rows[r1.index].classList.add('is-found'); rows[r1.index].scrollIntoView({ behavior:'smooth', block:'center' }); }
+    log(`Found "${r1.node.title}" in Today's Tasks at index ${r1.index} — Linear Search O(n).`);
+  } else if (r2) {
+    const rows = document.querySelectorAll('#goalList .task-item');
+    if (rows[r2.index]) { rows[r2.index].classList.add('is-found'); rows[r2.index].scrollIntoView({ behavior:'smooth', block:'center' }); }
+    log(`Found "${r2.node.title}" in Long-term Goals at index ${r2.index} — Linear Search O(n).`);
+  } else {
+    log(`"${title}" not found in either list.`);
+  }
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+const pLabel = { 1:'High', 2:'Medium', 3:'Low' };
+const pClass = { 1:'p1',   2:'p2',     3:'p3'  };
+
+function fmt(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${mo[+m-1]} ${+day}, ${y}`;
+}
+
+function isOverdue(deadline) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dl    = new Date(deadline); dl.setHours(0,0,0,0);
+  return dl < today;
+}
+
+function renderTaskList(list, containerId, markFn, delFn, emptyHead, emptySub) {
+  const el    = document.getElementById(containerId);
+  const tasks = list.toArray();
+
+  if (!tasks.length) {
+    el.innerHTML = `<div class="empty-state"><em>${emptyHead}</em>${emptySub}</div>`;
+    return;
+  }
+
+  // Find frog of the day — highest priority undone task
+  const undone = tasks.filter(t => !t.isDone);
+  const frogId = undone.length ? undone.reduce((a,b) => a.priority <= b.priority ? a : b).id : null;
+
+  el.innerHTML = tasks.map(t => {
+    const isFrogTask = t.id === frogId && containerId === 'todayList';
+    const overdue    = !t.isDone && isOverdue(t.deadline);
+    return `
+    <div class="task-item ${t.isDone ? 'is-done' : ''} ${isFrogTask ? 'is-frog' : ''}">
+      <span class="p-pill ${pClass[t.priority]}">${pLabel[t.priority]}</span>
+      <div class="ti-body">
+        <div class="ti-title">
+          ${isFrogTask ? `
+            <span class="frog-task-tip">
+              🐸
+              <div class="tip-box">
+                <strong>🐸 Eat This Frog First!</strong>
+                This is your most important pending task. Tackle it first and the rest of the day feels easy — inspired by Brian Tracy's productivity method.
+              </div>
+            </span>` : ''}
+          ${esc(t.title)}
+        </div>
+        <div class="ti-meta">${containerId === 'todayList' ? (overdue ? '<span style=\"color:var(--red);font-weight:700;\">Overdue</span>' : 'Due today') : 'Due ' + fmt(t.deadline) + (overdue ? ' <span style=\"color:var(--red);font-weight:700;\">· Overdue</span>' : '')}</div>
+      </div>
+      <div class="ti-actions">
+        ${!t.isDone ? `<button class="icon-btn done" onclick="${markFn}(${t.id})">✓ Done</button>` : ''}
+        <button class="icon-btn del" onclick="${delFn}(${t.id})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRoutine() {
+  const el = document.getElementById('routineList');
+  if (!routineItems.length) {
+    el.innerHTML = '<div class="empty-state"><em>Build your routine.</em>Add habits you want to do every day.</div>';
+    return;
+  }
+
+  // Sort items by time
+  const sorted = [...routineItems].sort((a, b) => a.time.localeCompare(b.time));
+
+  const times = ['Morning', 'Afternoon', 'Evening'];
+  let html = '';
+  times.forEach(group => {
+    const items = sorted.filter(r => getTimeGroup(r.time) === group);
+    if (!items.length) return;
+    html += `<div class="time-group-label">${group}</div>`;
+    items.forEach(r => {
+      html += `
+      <div class="task-item ${r.doneToday ? 'is-done' : ''}">
+        <span class="p-pill p3" style="background:var(--frog-l);color:var(--frog);min-width:80px;text-align:center;font-size:9px;">${fmtTime(r.time)}${r.timeTo ? ' – ' + fmtTime(r.timeTo) : ''}</span>
+        <div class="ti-body">
+          <div class="ti-title">${esc(r.title)}</div>
+          <div class="ti-meta">${r.doneToday ? '✓ Done today — resets tomorrow' : 'Not done yet today'}</div>
+        </div>
+        <div class="ti-actions">
+          ${!r.doneToday
+            ? `<button class="icon-btn done"  onclick="toggleRoutine(${r.id})">✓ Done</button>
+               <button class="icon-btn push"  onclick="pushToToday(${r.id})">+ Today</button>`
+            : `<button class="icon-btn" onclick="toggleRoutine(${r.id})" style="color:var(--ink3);">Undo</button>`}
+          <button class="icon-btn del" onclick="deleteRoutine(${r.id})">✕</button>
+        </div>
+      </div>`;
+    });
+  });
+  el.innerHTML = html;
+}
+
+function render() {
+  renderTaskList(todayLL, 'todayList', 'markDoneToday', 'deleteTodayById', 'All clear!', "Add today's tasks above.");
+  renderTaskList(goalLL,  'goalList',  'markDoneGoal',  'deleteGoalById',  'Dream big.', 'Add goals you want to achieve.');
+  renderRoutine();
+  updateFrogUI();
+
+  const all = todayLL.toArray().concat(goalLL.toArray());
+  document.getElementById('sTotal').textContent    = todayLL.size + goalLL.size;
+  document.getElementById('sHigh').textContent     = all.filter(t => t.priority === 1).length;
+  document.getElementById('sDone').textContent     = all.filter(t => t.isDone).length;
+  document.getElementById('sPending').textContent  = all.filter(t => !t.isDone).length;
+  document.getElementById('todayCount').textContent = todayLL.size + ' task' + (todayLL.size !== 1 ? 's' : '');
+  document.getElementById('goalCount').textContent  = goalLL.size  + ' goal' + (goalLL.size  !== 1 ? 's' : '');
+  document.getElementById('routineCount').textContent = routineItems.length + ' habit' + (routineItems.length !== 1 ? 's' : '');
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function v(id)     { return document.getElementById(id).value.trim(); }
+function clear(id) { document.getElementById(id).value = ''; }
+function log(msg)  { document.getElementById('logBar').textContent = msg; }
+function esc(s)    { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Enter key shortcuts
+document.getElementById('tTitle').addEventListener('keydown',    e => { if(e.key==='Enter') addToday(); });
+document.getElementById('gTitle').addEventListener('keydown',    e => { if(e.key==='Enter') addGoal(); });
+document.getElementById('rTimeFrom').addEventListener('keydown', e => { if(e.key==='Enter') { e.preventDefault(); document.getElementById('rTimeTo').focus(); }});
+document.getElementById('rTimeTo').addEventListener('keydown',   e => { if(e.key==='Enter') { e.preventDefault(); document.getElementById('rTitle').focus(); }});
+document.getElementById('rTitle').addEventListener('keydown',    e => { if(e.key==='Enter') addRoutine(); });
+document.getElementById('inSearch').addEventListener('keydown',  e => { if(e.key==='Enter') searchAll(); });
+
+render();
+</script>
+</body>
+</html>
